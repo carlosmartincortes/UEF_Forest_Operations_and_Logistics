@@ -1,7 +1,6 @@
-title: "2nd Class of exercises - Forest Operations and Logistics UEF"
-author: "Carlos Martín-Cortés & Heli Kymäläinen"
-date: "2025-04-04"
-output: html_document
+# 2nd Class of exercises - Forest Operations and Logistics UEF
+# Carlos Martín-Cortés & Heli Kymäläinen
+# 2025-04-04
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
