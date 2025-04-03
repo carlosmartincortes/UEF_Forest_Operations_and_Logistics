@@ -2,10 +2,6 @@
 ## Carlos Martín-Cortés & Heli Kymäläinen
 ## 2025-04-04
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # How to automatically create folders in a directory
 
 We can use the `dir.create()` function to create folders programmatically
