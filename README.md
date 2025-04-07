@@ -61,3 +61,63 @@ for (name in plot_folders) {
   }
 }
 ```
+
+# 3rd Class
+## Carlos Martín-Cortés & Heli Kymäläinen
+## 2025-04-07
+
+
+```{r}
+install.packages(c("sf", "readxl", "writexl", "dplyr"))
+library(sf)       
+library(writexl)  
+library(dplyr)    
+
+
+
+route_results <- "D:/Clases_UEF/Qgis/Results"
+folders_plot <- list.files(path = route_results, pattern = "Plot", full.names = TRUE, include.dirs = TRUE)
+specific_folder <- folders_plot[1]
+file_shp_plot <- list.files(path = specific_folder, pattern = "^Plot.*\\.shp$", full.names = TRUE)
+plot <- st_read(file_shp_plot)
+table_plot <- st_drop_geometry(plot)
+table_plot <- subset(table_plot, select = -fid)
+columnes_plot <- colnames(table_plot)
+
+names_routes <- list.files(path = specific_folder, pattern = "^Route.*\\.shp$")
+names_routes <- gsub("\\.shp$", "", names_routes)
+
+
+columnes <- c("Name", columnes_plot , names_routes)
+table <- data.frame(matrix(ncol = length(columnes), nrow = 0))
+colnames(table) <- columnes
+
+for (folder in folders_plot) {
+  specific_folder <- folder
+  name <- basename(specific_folder)
+  
+  # Plot
+  file_shp_plot <- list.files(path = specific_folder, pattern = "^Plot.*\\.shp$", full.names = TRUE)
+  plot <- st_read(file_shp_plot)
+  table_plot <- st_drop_geometry(plot)
+  table_plot <- subset(table_plot, select = -fid)
+  table_plot$Name  <- name
+  table_plot <- table_plot[order(table_plot$Slope), ]
+  
+  # Route
+  files_shp_route <- list.files(path = specific_folder, pattern = "^Route.*\\.shp$", full.names = TRUE)
+  
+  for (file in files_shp_route) {
+    route_name <- tools::file_path_sans_ext(basename(file))
+    route <- st_read(file)
+    table_route <- st_drop_geometry(route)
+    # Transfer information
+    table_plot[[route_name]] <- table_route$Dist_km
+  }
+  table <- rbind(table,table_plot)
+}
+
+write_xlsx(table, paste0(route_results,"/table.xlsx"))
+```
+
+
